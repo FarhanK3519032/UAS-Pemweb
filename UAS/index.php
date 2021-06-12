@@ -25,7 +25,7 @@
 		              <div class="brand-wrapper">
 		                <img src="assets/PC-LOGO.png" alt="logo" class="logo">
 		              </div>
-		              <p class="login-card-description">Sign into your account</p>
+		              <center><p class="login-card-description">Pabelan Campus - Attendance</p></center>
 		              	<form action="#!">
 		                  <div class="form-group">
 		                    <label for="email" class="sr-only">Email</label>
@@ -38,9 +38,9 @@
 		                  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 		            	</form>
 		            	<hr>
-		                <p class="login-card-footer-text">Don't have an account? <a href="#!" class="text-reset">Register here</a></p>
+		                <center><p class="login-card-footer-text">Don't have an account? <a href="#!" class="text-reset">Register here</a></p></center>
 		                <nav class="login-card-footer-nav">
-		                  <p class="mt-5 mb-3 text-muted">&copy; 2021-2022</p>
+		                  <center><p class="mt-5 mb-3 text-muted">&copy; 2021-2022</p></center>
 		                </nav>
 		            </div>
 		          </div>
