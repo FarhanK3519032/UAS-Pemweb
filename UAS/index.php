@@ -11,7 +11,6 @@
 		<link rel="stylesheet" href="login.css">
 	</head>
 	<body>
-
 		<!--Main Section Start-->
 		<main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
 		    <div class="container">
@@ -49,7 +48,6 @@
 		    </div>
 		</main>
 		<!--Main Section Finish-->
-
 	  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
