@@ -1,7 +1,7 @@
 <?php
 session_start();
 $unregistered = 0;
-if (isset($_POST['submit'])) {
+if (isset($_POST["submit"])) {
 	include 'dbconnect.php';
 	$username = $_POST['email'];
 	$password = $_POST['password'];
@@ -9,38 +9,36 @@ if (isset($_POST['submit'])) {
 	if (!mysqli_num_rows($login) == 0){
 		while($logindata = mysqli_fetch_array($login)) {
 			$type = $logindata['type'];
-			print_r($logindata);
+			echo $type;
+			#print_r($logindata);
 	  }
 		if ($type == 0) {
-			$data = mysqli_query($koneksi, "SELECT * FROM dosen WHERE username=$username");
-			if ($data) {
-				while($sessiondata = mysqli_fetch_assoc($data)) {
-		    	$_SESSION['type'] = $type;
-					$_SESSION['kode'] = $sessiondata['kode_dosen'];
-					$_SESSION['nama'] = $sessiondata['nama'];
-		  	}
-			}
+			$dosen = mysqli_query($koneksi, "SELECT * FROM dosen WHERE username='$username'");
+			$sessiondata = mysqli_fetch_assoc($dosen);
+		  $_SESSION['type'] = 0;
+			$_SESSION['kode'] = $sessiondata['kode_dosen'];
+			$_SESSION['nama'] = $sessiondata['nama'];
+			mysqli_close($koneksi);
 			header("Location:dosen.php");
-		} elseif ($type == 1) {
-			$data = mysqli_query($koneksi, "SELECT * FROM mhs WHERE username=$username");
-			if ($data) {
-				while($sessiondata = mysqli_fetch_assoc($data)) {
-		    	$_SESSION['type'] = $type;
-					$_SESSION['kode'] = $sessiondata['NIM'];
-					$_SESSION['nama'] = $sessiondata['nama'];
-					$_SESSION['prodi'] = $sessiondata['prodi'];
-					$_SESSION['fakultas'] = $sessiondata['fakultas'];
-		  	}
-			}
-			header("Location:presensi.php");
-			}
-		} elseif (mysqli_num_rows($login) == 0){
+		 } elseif ($type == 1) {
+			 $mahasiswa = mysqli_query($koneksi, "SELECT * FROM mhs WHERE username='$username'");
+			 $sessiondata = mysqli_fetch_assoc($mahasiswa);
+		   $_SESSION['type'] = 1;
+			 $_SESSION['kode'] = $sessiondata['NIM'];
+			 $_SESSION['nama'] = $sessiondata['nama'];
+			 $_SESSION['prodi'] = $sessiondata['prodi'];
+			 $_SESSION['fakultas'] = $sessiondata['fakultas'];
+			 mysqli_close($koneksi);
+			 header("Location:presensi.php");
+		 }
+	 } elseif (mysqli_num_rows($login) == 0){
 			$unregistered = 1;
+			mysqli_close($koneksi);
 		}
-	} elseif (isset($_SESSION["type"])){
-			if ($_SESSION["type"] == 0) {
+	} elseif (isset($_SESSION['type'])){
+			if ($_SESSION['type'] == 0) {
 				header("Location:dosen.php");
-			} elseif ($_SESSION["type"] == 1) {
+			} elseif ($_SESSION['type'] == 1) {
 				header("Location:presensi.php");
 			}
 		}
@@ -84,7 +82,7 @@ if (isset($_POST['submit'])) {
 					          ";
 					        }
 					        ?>
-									
+
 										<form action="index.php" method="POST">
 		                  <div class="form-group">
 		                    <label for="email" class="sr-only">Email</label>
