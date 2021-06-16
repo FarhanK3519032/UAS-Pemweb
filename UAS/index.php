@@ -1,3 +1,52 @@
+<?php
+session_start();
+if (isset($_SESSION["type"])){
+	if ($_SESSION["type"] == 0) {
+		header("Location:dosen.php");
+	} elseif ($_SESSION["type"] == 1) {
+		header("Location:presensi.php");
+	}
+} elseif (!isset($_SESSION["username"]) && isset($_POST['submit'])) {
+	include 'dbconnect.php';
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$login = mysqli_query($koneksi, "SELECT * FROM login WHERE username=$username,password=$password");
+	if (mysqli_num_rows($login) > 0) {
+		while($logindata = mysqli_fetch_assoc($login)) {
+    	$type = $logindata['type'];
+  	}
+		if ($type == 0) {
+			$data = mysqli_query($koneksi, "SELECT * FROM dosen WHERE username=$username");
+			if (mysqli_num_rows($data) > 0) {
+				while($sessiondata = mysqli_fetch_assoc($data)) {
+		    	$_SESSION['type'] = $type;
+					$_SESSION['kode'] = $sessiondata['kode_dosen'];
+					$_SESSION['nama'] = $sessiondata['nama'];
+		  	}
+			}
+			header("Location:dosen.php");
+		} elseif ($type == 1) {
+			$data = mysqli_query($koneksi, "SELECT * FROM mhs WHERE username=$username");
+			if (mysqli_num_rows($data) > 0) {
+				while($sessiondata = mysqli_fetch_assoc($data)) {
+		    	$_SESSION['type'] = $type;
+					$_SESSION['kode'] = $sessiondata['NIM'];
+					$_SESSION['nama'] = $sessiondata['nama'];
+					$_SESSION['prodi'] = $sessiondata['prodi'];
+					$_SESSION['fakultas'] = $sessiondata['fakultas'];
+		  	}
+			}
+			header("Location:presensi.php");
+		}
+
+
+
+	} else {
+
+	}
+}
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -7,7 +56,7 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 		<link rel="stylesheet" href="assets/css/login.css">
 	</head>
 	<body>
@@ -25,7 +74,7 @@
 		                <img src="assets/img/PC-LOGO.png" alt="logo" class="logo">
 		              </div>
 		              <center><p class="login-card-description">Pabelan Campus - Attendance</p></center>
-		              	<form action="#!">
+		              	<form action="index.php" method="POST">
 		                  <div class="form-group">
 		                    <label for="email" class="sr-only">Email</label>
 		                    <input type="email" name="email" id="email" class="form-control" placeholder="Email address" required autofocus>
@@ -48,7 +97,6 @@
 		</main>
 		<!--Main Section Finish-->
 	  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 	</body>
 </html>
