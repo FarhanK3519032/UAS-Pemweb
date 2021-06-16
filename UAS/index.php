@@ -1,23 +1,19 @@
 <?php
 session_start();
-if (isset($_SESSION["type"])){
-	if ($_SESSION["type"] == 0) {
-		header("Location:dosen.php");
-	} elseif ($_SESSION["type"] == 1) {
-		header("Location:presensi.php");
-	}
-} elseif (!isset($_SESSION["username"]) && isset($_POST['submit'])) {
+$unregistered = 0;
+if (isset($_POST['submit'])) {
 	include 'dbconnect.php';
-	$username = $_POST['username'];
+	$username = $_POST['email'];
 	$password = $_POST['password'];
-	$login = mysqli_query($koneksi, "SELECT * FROM login WHERE username=$username,password=$password");
-	if (mysqli_num_rows($login) > 0) {
-		while($logindata = mysqli_fetch_assoc($login)) {
-    	$type = $logindata['type'];
-  	}
+	$login = mysqli_query($koneksi, "SELECT * FROM login WHERE username='$username' AND password='$password'");
+	if (!mysqli_num_rows($login) == 0){
+		while($logindata = mysqli_fetch_array($login)) {
+			$type = $logindata['type'];
+			print_r($logindata);
+	  }
 		if ($type == 0) {
 			$data = mysqli_query($koneksi, "SELECT * FROM dosen WHERE username=$username");
-			if (mysqli_num_rows($data) > 0) {
+			if ($data) {
 				while($sessiondata = mysqli_fetch_assoc($data)) {
 		    	$_SESSION['type'] = $type;
 					$_SESSION['kode'] = $sessiondata['kode_dosen'];
@@ -27,7 +23,7 @@ if (isset($_SESSION["type"])){
 			header("Location:dosen.php");
 		} elseif ($type == 1) {
 			$data = mysqli_query($koneksi, "SELECT * FROM mhs WHERE username=$username");
-			if (mysqli_num_rows($data) > 0) {
+			if ($data) {
 				while($sessiondata = mysqli_fetch_assoc($data)) {
 		    	$_SESSION['type'] = $type;
 					$_SESSION['kode'] = $sessiondata['NIM'];
@@ -37,14 +33,17 @@ if (isset($_SESSION["type"])){
 		  	}
 			}
 			header("Location:presensi.php");
+			}
+		} elseif (mysqli_num_rows($login) == 0){
+			$unregistered = 1;
 		}
-
-
-
-	} else {
-
-	}
-}
+	} elseif (isset($_SESSION["type"])){
+			if ($_SESSION["type"] == 0) {
+				header("Location:dosen.php");
+			} elseif ($_SESSION["type"] == 1) {
+				header("Location:presensi.php");
+			}
+		}
 ?>
 
 <!DOCTYPE html>
@@ -56,7 +55,7 @@ if (isset($_SESSION["type"])){
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="assets/css/login.css">
 	</head>
 	<body>
@@ -74,7 +73,19 @@ if (isset($_SESSION["type"])){
 		                <img src="assets/img/PC-LOGO.png" alt="logo" class="logo">
 		              </div>
 		              <center><p class="login-card-description">Pabelan Campus - Attendance</p></center>
-		              	<form action="index.php" method="POST">
+
+									<?php
+					        if ($unregistered == 1) {
+					          echo "
+					          <div class='alert alert-danger alert-dismissible fade show font-monospace' role='alert'>
+					            Email/password is not registered.
+					            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+					          </div>
+					          ";
+					        }
+					        ?>
+									
+										<form action="index.php" method="POST">
 		                  <div class="form-group">
 		                    <label for="email" class="sr-only">Email</label>
 		                    <input type="email" name="email" id="email" class="form-control" placeholder="Email address" required autofocus>
@@ -83,7 +94,7 @@ if (isset($_SESSION["type"])){
 		                    <label for="password" class="sr-only">Password</label>
 		                    <input type="password" name="password" id="password" class="form-control" placeholder="***********" required>
 		                  </div>
-		                  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+		                  <button class="btn btn-lg btn-primary btn-block" name="submit" id="submit" type="submit">Sign in</button>
 		            	</form>
 		            	<hr>
 		                <nav class="login-card-footer-nav">
@@ -97,6 +108,7 @@ if (isset($_SESSION["type"])){
 		</main>
 		<!--Main Section Finish-->
 	  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 	</body>
 </html>
