@@ -9,7 +9,7 @@ if (isset($_POST["submit"])) {
 	if (!mysqli_num_rows($login) == 0){
 		while($logindata = mysqli_fetch_array($login)) {
 			$type = $logindata['type'];
-			echo $type;
+			#echo $type;
 			#print_r($logindata);
 	  }
 		if ($type == 0) {
