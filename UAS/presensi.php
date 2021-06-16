@@ -27,7 +27,6 @@
               <div class="collapse navbar-collapse" id="navcol-1">
                   <ul class="nav navbar-nav ml-auto">
                       <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                      <li class="nav-item"><a class="nav-link" href="MK_mhs.php">Mata Kuliah</a></li>
                       <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
 
                   </ul>
