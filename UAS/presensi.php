@@ -4,6 +4,9 @@ include 'dbconnect.php';
 if (!isset($_SESSION['type'])) {
   header("Location:index.php");
 } else {
+  if ($_SESSION['type'] != 1) {
+    header("Location:index.php");
+  }
   $kode = $_SESSION['kode'];
   $nama = $_SESSION['nama'];
   $prodi = $_SESSION['prodi'];
@@ -31,15 +34,23 @@ if (!isset($_SESSION['type'])) {
 
   </head>
   <body>
-      <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
-          <div class="container"><a class="navbar-brand logo text-weight-bold" href="index.php"><img src="assets/img/PC-LOGO.png" width="30" alt=""> Presensi UNPAB</a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-              <div class="collapse navbar-collapse" id="navcol-1">
-                  <ul class="nav navbar-nav ms-auto">
-                      <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                      <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
-                  </ul>
-              </div>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="index.php"><img src="assets/img/PC-LOGO.png" width="30" alt=""> Presensi Pabelan Campus</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="logout.php">Logout</a>
+              </li>
+            </ul>
           </div>
+        </div>
       </nav>
       <main class="page">
           <section class="clean-block dark pb-4">
@@ -98,7 +109,6 @@ if (!isset($_SESSION['type'])) {
                                 </thead>
                                 <tbody>
                                   <?php
-                                    include 'dbconnect.php';
                                     $matkul = mysqli_query($koneksi, "SELECT * FROM matkul");
                                     $i = 1;
                                     while ($row = mysqli_fetch_array($matkul)) {
@@ -112,7 +122,7 @@ if (!isset($_SESSION['type'])) {
                                       <td>".$row['kode_dosen']."</td>
                                       <td>".$row['nama_matkul']."</td>
                                       <td>".$row['sks']."</td>
-                                      <td><a href='matkul.php?kode=".$row['kode_matkul']."'class='btn btn-info text-light'>Detail</button></td>
+                                      <td><a href='matkul.php?kodemk=".$row['kode_matkul']."'class='btn btn-info text-light'>Detail</a></td>
                                       </tr>";
                                       $i++;
                                     }
