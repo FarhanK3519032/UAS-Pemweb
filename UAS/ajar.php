@@ -7,11 +7,15 @@ if (!isset($_SESSION['type'])) {
   if ($_SESSION['type'] != 0) {
     header("Location:index.php");
   }
+  $kodedosen = $_SESSION['kode'];
   $kodemk = $_GET['kodemk'];
   $matakuliah = mysqli_query($koneksi, "SELECT * FROM matkul WHERE kode_matkul='$kodemk'");
   $datamk = mysqli_fetch_assoc($matakuliah);
   $namamk = $datamk['nama_matkul'];
   $sks = $datamk['sks'];
+  if ($kodedosen != $datamk['kode_dosen']) {
+    header("Location:index.php");
+  }
 } elseif(!isset($_GET['kodemk'])){
   header("Location:index.php");
 }
@@ -81,8 +85,8 @@ if (!isset($_SESSION['type'])) {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <?php 
-                                  $getpresensi = mysqli_query($koneksi, "SELECT kode_jadwal,start,end FROM jadwal WHERE kode_matkul='$kodemk'");
+                                  <?php
+                                  $getpresensi = mysqli_query($koneksi, "SELECT kode_absen,start,end FROM jadwal WHERE kode_matkul='$kodemk'");
                                   $i=1;
                                   while ($row = mysqli_fetch_array($getpresensi)) {
                                       if($i%2 == 1){
@@ -91,13 +95,14 @@ if (!isset($_SESSION['type'])) {
                                         echo "<tr>";
                                       }
                                       echo "
-                                      <td>".$row['kode_jadwal']."</td>
+                                      <td>".$row['kode_absen']."</td>
                                       <td>".$row['start']."</td>
                                       <td>".$row['end']."</td>
-                                      <td><a href='editpresensi.php?kodejadwal=".$row['kode_jadwal']."'class='btn btn-info text-light'>Edit</a></td>
+                                      <td><a href='editpresensi.php?kodeabsen=".$row['kode_absen']."'class='btn btn-info text-light'>Edit</a></td>
                                       </tr>";
                                       $i++;
                                     }
+                                    mysqli_close($koneksi);
                                   ?>
                                 </tbody>
                               </table>
@@ -107,7 +112,7 @@ if (!isset($_SESSION['type'])) {
                       </div>
           </section>
 
-          
+
 
       </main>
       <footer class="page-footer dark">

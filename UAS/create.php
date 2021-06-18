@@ -1,17 +1,34 @@
 <?php
 session_start();
+$success = 0;
 include 'dbconnect.php';
 if (!isset($_SESSION['type'])) {
   header("Location:index.php");
-} elseif(isset($_GET['kodemk'])) {
+} elseif(isset($_SESSION['type'])) {
   if ($_SESSION['type'] != 0) {
     header("Location:index.php");
   }
+  if (!isset($_GET['kodemk'])) {
+    header("Location:index.php");
+  }
+  $kodedosen = $_SESSION['kode'];
   $kodemk = $_GET['kodemk'];
   $matakuliah = mysqli_query($koneksi, "SELECT * FROM matkul WHERE kode_matkul='$kodemk'");
   $datamk = mysqli_fetch_assoc($matakuliah);
   $namamk = $datamk['nama_matkul'];
   $sks = $datamk['sks'];
+  if ($kodedosen != $datamk['kode_dosen']) {
+    header("Location:index.php");
+  }
+  if (isset($_POST['submit'])) {
+    $start = $_POST['start'];
+    $end = $_POST['end'];
+    $create = mysqli_query($koneksi, "INSERT INTO jadwal (kode_matkul,sks,start,end) VALUES ('$kodemk','$sks','$start','$end')");
+    if ($create){
+			$success = 1;
+		}
+  }
+  mysqli_close($koneksi);
 } elseif(!isset($_GET['kodemk'])){
   header("Location:index.php");
 }
@@ -63,26 +80,36 @@ if (!isset($_SESSION['type'])) {
                           <h4 class="text-center text-uppercase">BUAT ABSENSI <?php echo "$namamk"; ?></h4>
                           <p class="text-center">Jumlah SKS: <?php echo "$sks"; ?></p>
                           <hr>
+                          <?php
+                          if ($success == 1) {
+                            echo "
+                            <div class='alert alert-success alert-dismissible fade show font-monospace' role='alert'>
+        					            Berhasil membuat presensi!
+        					            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+        					          </div>
+                            ";
+                          }
+                           ?>
                           <br>
                       <div class="container mt-3">
                       <div class="row d-flex justify-content-center">
                         <div class="col-sm-9">
                           <div class="card">
                             <div class="card-body">
-                              <form>
+                              <form method="POST" action="create.php?kodemk=<?php echo "$kodemk"; ?>">
                                 <div class="mb-3">
                                   <label for="kodemk" class="form-label">Kode MK</label>
-                                  <input type="text" class="form-control" id="kodemk" aria-describedby="kodemkdesc" value="<?php echo "$kodemk" ?>" disabled>  
+                                  <input type="text" class="form-control" id="kodemk" name="kodemk" aria-describedby="kodemkdesc" value="<?php echo "$kodemk" ?>" disabled>
                                 </div>
                                 <div class="mb-3">
-                                  <label for="exampleInputPassword1" class="form-label">Password</label>
-                                  <input type="password" class="form-control" id="exampleInputPassword1">
+                                  <label for="start" class="form-label">Mulai</label>
+                                  <input type="datetime-local" class="form-control" id="start" name="start">
                                 </div>
-                                <div class="mb-3 form-check">
-                                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                <div class="mb-3">
+                                  <label for="end" class="form-label">Akhir</label>
+                                  <input type="datetime-local" class="form-control" id="end" name="end">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" id="submit" name="submit" class="btn btn-outline-info" value="submit">Create</button>
                               </form>
                             </div>
                           </div>
@@ -90,7 +117,7 @@ if (!isset($_SESSION['type'])) {
                       </div>
           </section>
 
-          
+
 
       </main>
       <footer class="page-footer dark">

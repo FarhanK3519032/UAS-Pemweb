@@ -6,19 +6,22 @@ if (!isset($_SESSION['type'])) {
 } else {
   if ($_SESSION['type'] != 1) {
     header("Location:index.php");
+  } elseif (!isset($_GET['mk'])) {
+    header("Location:index.php");
   }
   $kode = $_SESSION['kode'];
-  //Presensinya
-  date_default_timezone_set('Asia/Jakarta');
-  $kodeabsen = $_GET['absen'];
-  $now =  date("Y-m-d H:i:s");
-  $getdata = mysqli_query($koneksi, "SELECT * FROM jadwal WHERE kode_absen='$kodeabsen'");
-  $data = mysqli_fetch_assoc($getdata);
-  $getcek = mysqli_query($koneksi, "SELECT * FROM presensi WHERE NIM='$kode' AND kode_absen='$kodeabsen'");
-  $cek = mysqli_fetch_assoc($getcek);
-  $getdatamatkul = mysqli_query($koneksi, "SELECT nama_matkul FROM matkul WHERE kode_matkul='".$data['kode_matkul']."'");
+  $nama = $_SESSION['nama'];
+  $prodi = $_SESSION['prodi'];
+  $fakultas = $_SESSION['fakultas'];
+  $kode_matkul = $_GET['mk'];
+  $getdatamatkul = mysqli_query($koneksi, "SELECT * FROM matkul WHERE kode_matkul='$kode_matkul'");
   $datamatkul = mysqli_fetch_assoc($getdatamatkul);
-  mysqli_close($koneksi);
+  $getdatadosen = mysqli_query($koneksi, "SELECT * FROM dosen WHERE kode_dosen='".$datamatkul['kode_dosen']."'");
+  $datadosen = mysqli_fetch_assoc($getdatadosen);
+  $namamk = $datamatkul['nama_matkul'];
+  $namadosen = $datadosen['nama'];
+  $sks = $datamatkul['sks'];
+
 }
 ?>
 <!DOCTYPE html>
@@ -36,6 +39,7 @@ if (!isset($_SESSION['type'])) {
     <link rel="stylesheet" href="assets/css/presensi.css">
     <link rel="stylesheet" href="assets/css/untitled.css">
     <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
 
@@ -65,47 +69,50 @@ if (!isset($_SESSION['type'])) {
                   <div class="block-heading "></div>
                   <div class="block-content">
                       <div class="">
-                        <h4 class="text-center font-weight-bold text-uppercase">PRESENSI MATA KULIAH <?php echo $datamatkul['nama_matkul']; ?></h4>
-                        <p class="text-center"><?php echo "SKS: ".$data['sks'].""; ?></p>
+                        <h4 class="text-center font-weight-bold text-uppercase mb-0">RIWAYAT PRESENSI MATA KULIAH <?php echo "$namamk";?></h4>
+                        <p class="text-center mb-0">Dosen Pengampu: <?php echo "$namadosen"; ?></p>
+                        <p class="text-center mb-0">Kode MK: <?php echo "$kode_matkul"; ?></p>
+                        <p class="text-center">SKS: <?php echo "$sks"; ?></p>
                         <hr>
                         <br>
-                        <?php
-                        if (mysqli_num_rows($getcek) != 0) {
-                          if (isset($_POST['success'])) {
-                            echo "
-        					          <div class='alert alert-success fade show font-monospace' role='alert'>
-        					            Berhasil presensi!<br>
-        					            <a href='index.php' class='btn btn-outline-info'>Kembali ke Home</a>
-        					          </div>
-        					          ";
-                          } elseif (!isset($_POST['success'])) {
-                            echo "
-        					          <div class='alert alert-danger fade show font-monospace' role='alert'>
-        					            Anda sudah presensi!
-        					          </div>
-        					          ";
+                        <div class="row justify-content-evenly">
+                          <?php
+                          $getpresensi = mysqli_query($koneksi, "SELECT * FROM jadwal WHERE kode_matkul='$kode_matkul'");
+                          $kodeabsen;
+                          if($getpresensi){
+                            while ($data = mysqli_fetch_array($getpresensi)) {
+                              $kodeabsen = $data['kode_absen'];
+                              $getcek = mysqli_query($koneksi, "SELECT * FROM presensi WHERE NIM='$kode' AND kode_absen='$kodeabsen'");
+                              $cek = mysqli_fetch_assoc($getcek);
+                              if (mysqli_num_rows($getcek) == 0) {
+                                echo "
+                                <div class='alert alert-danger col-sm-5'>
+                                    <div class='answer'>
+                                        <p>".$data['start']." s.d. ".$data['end']."</p>
+                                        <a href='presensi.php?absen=".$kodeabsen."' class='btn btn-danger'>Presensi</a>
+                                    </div>
+                                </div>
+                                ";
+                              } elseif (mysqli_num_rows($getcek) != 0) {
+                                echo "
+                                <div class='alert alert-success col-sm-5'>
+                                    <div class='answer'>
+                                        <p>".$data['start']." s.d. ".$data['end']."</p>
+                                        <p>Keterangan: ".$cek['ket']."</p>
+                                    </div>
+                                </div>
+                                ";
+                              }
+                            }
                           }
-                        } elseif (mysqli_num_rows($getcek) == 0) {
-                          echo "
-                          <form method='POST' action='process.php'>
-                            <input type='text' id='NIM' name='NIM' value='$kode' hidden>
-                            <input type='text' id='kode_absen' name='kode_absen' value='$kodeabsen' hidden>
-                            <label for='ket' class='form-label'>Keterangan</label>
-                            <select class='form-select' id='ket' name='ket' required>
-                              <option selected value='HADIR'>Hadir</option>
-                              <option value='SAKIT'>Sakit</option>
-                            </select>
-                            <br>
-                            <button type='submit' id='submit' name='submit' class='btn btn-outline-info' value='submit'>Presensi</button>
-                          </form>
-                          ";
-                        }
-                        ?>
-
+                          mysqli_close($koneksi);
+                          ?>
+                        </div>
                       </div>
                     </div>
                   </div>
           </section>
+
 
 
       </main>
@@ -123,6 +130,11 @@ if (!isset($_SESSION['type'])) {
       <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
       <script src="assets/js/presensi.js"></script>
       <script src="assets/js/theme.js"></script>
+      <script type="text/javascript">
+      $(document).ready(function() {
+        $('#tabel-data').DataTable();
+      } );
+      </script>
 
     </body>
   </html>

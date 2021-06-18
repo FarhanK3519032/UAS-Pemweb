@@ -29,7 +29,7 @@ if (isset($_POST["submit"])) {
 			 $_SESSION['prodi'] = $sessiondata['prodi'];
 			 $_SESSION['fakultas'] = $sessiondata['fakultas'];
 			 mysqli_close($koneksi);
-			 header("Location:presensi.php");
+			 header("Location:mahasiswa.php");
 		 }
 	 } elseif (mysqli_num_rows($login) == 0){
 			$unregistered = 1;
@@ -39,10 +39,10 @@ if (isset($_POST["submit"])) {
 			if ($_SESSION['type'] == 0) {
 				header("Location:dosen.php");
 			} elseif ($_SESSION['type'] == 1) {
-				header("Location:presensi.php");
+				header("Location:mahasiswa.php");
 			}
 		}
-		
+
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +58,7 @@ if (isset($_POST["submit"])) {
 		<link rel="stylesheet" href="assets/css/login.css">
 	</head>
 	<body>
-		
+
 		<!--Main Section Start-->
 		<main class="d-flex align-items-center min-vh-100 py-3 py-md-0" >
 		    <div class="container">
@@ -98,7 +98,7 @@ if (isset($_POST["submit"])) {
 		                  <button class="btn btn-lg btn-primary btn-block" name="submit" id="submit" type="submit">Sign in</button>
 		            	</form>
 		            	<hr>
-		            	<center><span class="badge bg-warning text-monospace">⚠ 
+		            	<center><span class="badge bg-warning text-monospace">⚠
 		            	NOT SUPPORTED ON FIREFOX & INTERNET EXPLORER ⚠</span></center>
 		                <nav class="login-card-footer-nav">
 		                  <center><p class="mt-5 mb-3 text-muted">&copy; 2021-2022</p></center>

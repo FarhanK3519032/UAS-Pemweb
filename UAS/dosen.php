@@ -95,6 +95,7 @@ if (!isset($_SESSION['type'])) {
                                       </tr>";
                                       $i++;
                                     }
+                                    mysqli_close($koneksi);
                                   ?>
                                 </tbody>
                               </table>
@@ -104,7 +105,7 @@ if (!isset($_SESSION['type'])) {
                       </div>
           </section>
 
-          
+
 
       </main>
       <footer class="page-footer dark">
