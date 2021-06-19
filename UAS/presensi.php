@@ -85,6 +85,12 @@ if (!isset($_SESSION['type'])) {
         					          </div>
         					          ";
                           }
+                        } elseif ($now > $data['end'] || $now < $data['start']) {
+                          echo "
+                          <div class='alert alert-danger fade show font-monospace' role='alert'>
+                            Waktu presensi tidak sesuai!
+                          </div>
+                          ";
                         } elseif (mysqli_num_rows($getcek) == 0) {
                           echo "
                           <form method='POST' action='process.php'>

@@ -63,7 +63,7 @@ if (!isset($_SESSION['type'])) {
                   </div>
                   <div class="block-content">
                       <div class="">
-                        <h4 class="text-center font-weight-bold">PRESENSI AKTIF HARI INI</h4>
+                        <h4 class="text-center font-weight-bold">PRESENSI AKTIF</h4>
                         <hr>
                         <br>
                         <div class="row justify-content-evenly">

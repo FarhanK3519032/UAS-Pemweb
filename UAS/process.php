@@ -14,7 +14,7 @@ echo "
   </head>
   <body>
     <form action='presensi.php?absen=$kode_absen' id='status' method='post'>
-      <input type='text' name='success' value='success'>
+      <input type='text' name='success' value='success' hidden>
     </form>
     <script type='text/javascript'>
       document.getElementById('status').submit();
