@@ -14,6 +14,8 @@ if (!isset($_SESSION['type'])) {
   $prodi = $_SESSION['prodi'];
   $fakultas = $_SESSION['fakultas'];
   $kode_matkul = $_GET['mk'];
+  date_default_timezone_set('Asia/Jakarta');
+  $now =  date("Y-m-d H:i:s");
   $getdatamatkul = mysqli_query($koneksi, "SELECT * FROM matkul WHERE kode_matkul='$kode_matkul'");
   $datamatkul = mysqli_fetch_assoc($getdatamatkul);
   $getdatadosen = mysqli_query($koneksi, "SELECT * FROM dosen WHERE kode_dosen='".$datamatkul['kode_dosen']."'");
@@ -80,6 +82,7 @@ if (!isset($_SESSION['type'])) {
                           $getpresensi = mysqli_query($koneksi, "SELECT * FROM jadwal WHERE kode_matkul='$kode_matkul'");
                           $kodeabsen;
                           if($getpresensi){
+                            $i = 1;
                             while ($data = mysqli_fetch_array($getpresensi)) {
                               $kodeabsen = $data['kode_absen'];
                               $getcek = mysqli_query($koneksi, "SELECT * FROM presensi WHERE NIM='$kode' AND kode_absen='$kodeabsen'");
@@ -87,21 +90,33 @@ if (!isset($_SESSION['type'])) {
                               if (mysqli_num_rows($getcek) == 0) {
                                 echo "
                                 <div class='alert alert-danger col-sm-5'>
+                                    <div class='question'><h4>Presensi ke-$i</h4></div>
                                     <div class='answer'>
                                         <p>".$data['start']." s.d. ".$data['end']."</p>
-                                        <a href='presensi.php?absen=".$kodeabsen."' class='btn btn-danger'>Presensi</a>
-                                    </div>
-                                </div>
                                 ";
+                                if ($now < $data['end']) {
+                                  echo "
+                                  <a href='presensi.php?absen=".$kodeabsen."' class='btn btn-danger'>Presensi</a>
+                                  </div>
+                                  </div>";
+                                } elseif ($now > $data['end']) {
+                                  echo "
+                                  <p>Keterangan: TIDAK HADIR</p>
+                                  </div>
+                                  </div>";
+                                }
+                                $i++;
                               } elseif (mysqli_num_rows($getcek) != 0) {
                                 echo "
                                 <div class='alert alert-success col-sm-5'>
+                                    <div class='question'><h4>Presensi ke-$i</h4></div>
                                     <div class='answer'>
                                         <p>".$data['start']." s.d. ".$data['end']."</p>
                                         <p>Keterangan: ".$cek['ket']."</p>
                                     </div>
                                 </div>
                                 ";
+                                $i++;
                               }
                             }
                           }
