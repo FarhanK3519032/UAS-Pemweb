@@ -56,6 +56,7 @@ if (isset($_POST["submit"])) {
 		<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="assets/css/login.css">
+		<link rel="icon" href="assets/img/pc-icon.ico">
 	</head>
 	<body>
 
