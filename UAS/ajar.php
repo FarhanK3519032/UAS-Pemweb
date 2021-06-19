@@ -64,7 +64,7 @@ if (!isset($_SESSION['type'])) {
                 <div class="block-heading"></div>
                   <div class="block-content">
                       <div class="">
-                          <h4 class="text-center text-uppercase">DAFTAR ABSENSI <?php echo "$namamk"; ?></h4>
+                          <h4 class="text-center text-uppercase">DAFTAR PRESENSI <?php echo "$namamk"; ?></h4>
                           <p class="text-center">Jumlah SKS: <?php echo "$sks"; ?></p>
                           <hr>
                           <br>
@@ -98,7 +98,7 @@ if (!isset($_SESSION['type'])) {
                                       <td>".$row['kode_absen']."</td>
                                       <td>".$row['start']."</td>
                                       <td>".$row['end']."</td>
-                                      <td><a href='editpresensi.php?kodeabsen=".$row['kode_absen']."'class='btn btn-info text-light'>Edit</a></td>
+                                      <td><a href='editpresensi.php?absen=".$row['kode_absen']."'class='btn btn-info text-light'>Edit</a></td>
                                       </tr>";
                                       $i++;
                                     }
