@@ -71,6 +71,17 @@ if (!isset($_SESSION['type'])) {
                       <div class="container mt-3">
                       <div class="row d-flex justify-content-center">
                         <div class="col-sm-9">
+                          <?php
+                          if (isset($_POST['status'])) {
+                            echo "
+                            <div class='alert alert-success alert-dismissible fade show font-monospace' role='alert'>
+                              Berhasil menghapus presensi!
+                              <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                            </div>
+                            ";
+                          }
+
+                           ?>
                           <div class="container text-center"><a href='create.php?kodemk=<?php echo "$kodemk" ?>' class='btn btn-outline-info'>Buat Presensi</a></div>
                           <br>
                           <div class="card">

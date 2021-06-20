@@ -64,7 +64,7 @@ if (!isset($_SESSION['type'])) {
         </div>
       </nav>
       <?php
-      //Buat edit
+      //Buat edit kehadiran
       if (isset($_GET['absen']) && isset($_GET['nim']) && isset($_GET['action'])) {
         $NIM = $_GET['nim'];
         $action = $_GET['action'];
@@ -79,8 +79,8 @@ if (!isset($_SESSION['type'])) {
                       <div class="block-content">
                           <div class="">
                               <h4 class="text-center text-uppercase">UBAH PRESENSI <?php echo "$namamk"; ?></h4>
-                              <p class="text-center">Kode Presensi: <?php echo "$kode_absen"; ?></p>
-                              <p class="text-center">SKS: <?php echo "$sks"; ?></p>
+                              <p class="text-center mb-0">Kode Presensi: <?php echo "$kode_absen"; ?></p>
+                              <p class="text-center mb-0">SKS: <?php echo "$sks"; ?></p>
                               <hr>
                               <br>
                           <div class="container mt-3">
@@ -117,8 +117,8 @@ if (!isset($_SESSION['type'])) {
                       <div class="block-content">
                           <div class="">
                               <h4 class="text-center text-uppercase">UBAH PRESENSI <?php echo "$namamk"; ?></h4>
-                              <p class="text-center">Kode Presensi: <?php echo "$kode_absen"; ?></p>
-                              <p class="text-center">SKS: <?php echo "$sks"; ?></p>
+                              <p class="text-center mb-0">Kode Presensi: <?php echo "$kode_absen"; ?></p>
+                              <p class="text-center mb-0">SKS: <?php echo "$sks"; ?></p>
                               <hr>
                               <br>
                           <div class="container mt-3">
@@ -148,8 +148,95 @@ if (!isset($_SESSION['type'])) {
                       </div>
                     </div>
               </section>
-        <?php }
-      } elseif (!isset($_GET['absen']) || !isset($_GET['nim']) || !isset($_GET['action'])) { ?>
+        <?php } else {
+          header("Location: editpresensi.php?absen=$kode_absen");
+        }
+      } elseif (!isset($_GET['absen']) || !isset($_GET['nim']) || !isset($_GET['action'])) {
+        if (isset($_GET['absen']) && isset($_GET['action'])) {
+          if ($_GET['action'] == "ubahwaktu") {
+            $start = $datajadwal['start'];
+            $end = $datajadwal['end']; ?>
+            <main class="page">
+                <section class="clean-block dark">
+                    <div class="container">
+                      <div class="block-heading"></div>
+                        <div class="block-content">
+                            <div class="">
+                                <h4 class="text-center text-uppercase">UBAH PRESENSI <?php echo "$namamk"; ?></h4>
+                                <p class="text-center mb-0">Kode Presensi: <?php echo "$kode_absen"; ?></p>
+                                <p class="text-center mb-0">SKS: <?php echo "$sks"; ?></p>
+                                <hr>
+                                <br>
+                            <div class="container mt-3">
+                            <div class="row d-flex justify-content-center">
+                              <div class="col-sm-9">
+                                <br>
+                                <div class="card">
+                                  <div class="card-body">
+                                    <p>Ubah presensi dengan kode <?php echo "$kode_absen"; ?></p>
+                                    <form method="POST" action="ubah.php">
+                                      <input type="text" class="form-control" id="kode_absen" name="kode_absen" aria-describedby="kodeabsendesc" value="<?php echo "$kode_absen" ?>" hidden>
+                                      <input type="text" name="edittype" value="ubahwaktu" hidden>
+                                      <div class="mb-3">
+                                        <label for="start" class="form-label">Mulai</label>
+                                        <input type="datetime-local" class="form-control" id="start" name="start">
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="end" class="form-label">Akhir</label>
+                                        <input type="datetime-local" class="form-control" id="end" name="end">
+                                      </div>
+                                      <button type="submit" id="submit" name="submit" class="btn btn-outline-info" value="submit">Ubah</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </section>
+          <?php } elseif ($_GET['action'] == "hapuspresensi") { ?>
+            <main class="page">
+                <section class="clean-block dark">
+                    <div class="container">
+                      <div class="block-heading"></div>
+                        <div class="block-content">
+                            <div class="">
+                                <h4 class="text-center text-uppercase">UBAH PRESENSI <?php echo "$namamk"; ?></h4>
+                                <p class="text-center mb-0">Kode Presensi: <?php echo "$kode_absen"; ?></p>
+                                <p class="text-center mb-0">SKS: <?php echo "$sks"; ?></p>
+                                <hr>
+                                <br>
+                            <div class="container mt-3">
+                            <div class="row d-flex justify-content-center">
+                              <div class="col-sm-9">
+                                <br>
+                                <div class="card">
+                                  <div class="card-body">
+                                    <div class="alert alert-danger alert-dismissible fade show font-monospace" role="alert">
+                                     Anda yakin akan menghapus presensi dengan kode <?php echo "$kode_absen"; ?> ?<br>
+                                     <form class="" action="ubah.php" method="post">
+                                       <input type="text" name="kode_absen" value="<?php echo $kode_absen ?>" hidden>
+                                       <input type="text" name="edittype" value="hapus" hidden>
+                                       <div class='btn-group' role='group'>
+                                         <button type="submit" name="submit" id="submit" class="btn btn-danger">Ya</button>
+                                         <a href='editpresensi.php?absen=<?php echo $kode_absen ?>' type='button' class='btn btn-info'>Tidak</a>
+                                       </div>
+                                     </form>
+                                   </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </section>
+          <?php } else {
+            header("Location: editpresensi.php?absen=$kode_absen");
+          }?>
+
+      <?php  } else {?>
         <main class="page">
             <section class="clean-block dark">
                 <div class="container">
@@ -157,13 +244,21 @@ if (!isset($_SESSION['type'])) {
                     <div class="block-content">
                         <div class="">
                             <h4 class="text-center text-uppercase">DAFTAR PRESENSI <?php echo "$namamk"; ?></h4>
-                            <p class="text-center">Kode Presensi: <?php echo "$kode_absen"; ?></p>
-                            <p class="text-center">SKS: <?php echo "$sks"; ?></p>
+                            <p class="text-center mb-0">Kode Presensi: <?php echo "$kode_absen"; ?></p>
+                            <p class="text-center mb-0">SKS: <?php echo "$sks"; ?></p>
+                            <p class="text-center mb-0">Waktu: <?php echo "".$datajadwal['start']." - ".$datajadwal['end'].""; ?></p>
                             <hr>
                             <br>
                         <div class="container mt-3">
                         <div class="row d-flex justify-content-center">
                           <div class="col-sm-9">
+                            <br>
+                            <center>
+                              <div class="btn-group" role="group" aria-label="Basic example">
+                                <a href="editpresensi.php?absen=<?php echo $kode_absen ?>&action=ubahwaktu" name="ubahwaktu" type="button" class="btn btn-info">Ubah Waktu Presensi</a>
+                                <a href="editpresensi.php?absen=<?php echo $kode_absen ?>&action=hapuspresensi" name="hapuspresensi" type="button" class="btn btn-danger">Hapus Presensi</a>
+                              </div>
+                            </center>
                             <br>
                             <div class="card">
                               <div class="card-body">
@@ -173,11 +268,25 @@ if (!isset($_SESSION['type'])) {
                                   if ($status == "success_edit") {
                                     echo "
                                     <div class='alert alert-success alert-dismissible fade show font-monospace' role='alert'>
-                					            Berhasil mengubah presensi!
+                					            Berhasil mengubah kehadiran mahasiswa!
                 					            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                 					          </div>
                                     ";
                                   } elseif ($status == "success_delete") {
+                                    echo "
+                                    <div class='alert alert-success alert-dismissible fade show font-monospace' role='alert'>
+                					            Berhasil menghapus kehadiran mahasiswa!
+                					            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                					          </div>
+                                    ";
+                                  } elseif ($status == "success_ubah") {
+                                    echo "
+                                    <div class='alert alert-success alert-dismissible fade show font-monospace' role='alert'>
+                					            Berhasil mengubah waktu presensi!
+                					            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                					          </div>
+                                    ";
+                                  } elseif ($status == "success_hapus") {
                                     echo "
                                     <div class='alert alert-success alert-dismissible fade show font-monospace' role='alert'>
                 					            Berhasil menghapus presensi!
@@ -188,6 +297,7 @@ if (!isset($_SESSION['type'])) {
                                 }
                                 ?>
 
+                                <h5 class="text-center">Kehadiran Mahasiswa</h5>
                                 <table id="tabel-data" class="table text-center table-bordered">
                                   <thead>
                                     <tr>
@@ -235,7 +345,8 @@ if (!isset($_SESSION['type'])) {
 
 
         </main>
-      <?php } ?>
+      <?php }
+    }?>
       <footer class="page-footer dark">
           <div class="footer-copyright">
             <p>Presensi UNPAB v0.0.0.1</p>
